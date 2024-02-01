@@ -1,0 +1,133 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat App</title>
+</head>
+<body>
+  <h1>Chat App</h1>
+
+  <div id="chat-box">
+    <!-- Messages will be displayed here -->
+  </div>
+
+  <div id="login-signup-form">
+    <h2>Login or Sign Up</h2>
+    <form id="auth-form">
+      <label for="username">Username:</label>
+      <input type="text" id="username" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+
+      <button type="button" onclick="loginOrSignUp()">Login/Sign Up</button>
+    </form>
+  </div>
+
+  <div id="message-form" style="display: none;">
+    <h2>Send a Message</h2>
+    <form id="send-message-form">
+      <label for="message">Message:</label>
+      <input type="text" id="message" required>
+
+      <button type="button" onclick="sendMessage()">Send</button>
+    </form>
+  </div>
+
+  <script>
+    async function loginOrSignUp() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      // API endpoint for login/sign up
+      const endpoint = "/api/v1/account/create";
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.text();
+
+        if (response.ok) {
+          // If successful, show message form and hide login/signup form
+          document.getElementById("login-signup-form").style.display = "none";
+          document.getElementById("message-form").style.display = "block";
+        }
+
+        alert(result);
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error occurred. Please try again.");
+      }
+    }
+
+    async function sendMessage() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const message = document.getElementById("message").value;
+
+      // API endpoint for sending messages
+      const endpoint = "/api/v1/message/send";
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password, message }),
+        });
+
+        const result = await response.text();
+
+        if (response.ok) {
+          // Clear the message input after successful send
+          document.getElementById("message").value = "";
+        }
+
+        alert(result);
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error occurred. Please try again.");
+      }
+    }
+
+    async function getMessages() {
+      // API endpoint for getting last 25 messages
+      const endpoint = "/api/v1/message/get";
+
+      try {
+        const response = await fetch(endpoint);
+        const messages = await response.json();
+
+        // Update the UI with the messages
+        const chatBox = document.getElementById("chat-box");
+        chatBox.innerHTML = "";
+
+        messages.forEach((msg) => {
+          const messageElement = document.createElement("div");
+          messageElement.textContent = `${msg.user}: ${msg.message}`;
+          chatBox.appendChild(messageElement);
+        });
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error occurred while fetching messages. Please try again.");
+      }
+    }
+
+    // Fetch messages when the page loads
+    getMessages();
+
+    // Fetch messages every 5 seconds for real-time updates
+    setInterval(getMessages, 5000);
+  </script>
+</body>
+</html>

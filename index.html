@@ -43,7 +43,7 @@
       const password = document.getElementById("password").value;
 
       // API endpoint for login/sign up
-      const endpoint = "/api/v1/account/create";
+      const endpoint = "https://enthusiastic-moth-tuxedo.cyclic.app//api/v1/account/create";
 
       try {
         const response = await fetch(endpoint, {
@@ -75,7 +75,7 @@
       const message = document.getElementById("message").value;
 
       // API endpoint for sending messages
-      const endpoint = "/api/v1/message/send";
+      const endpoint = "https://enthusiastic-moth-tuxedo.cyclic.app//api/v1/message/send";
 
       try {
         const response = await fetch(endpoint, {
@@ -102,7 +102,7 @@
 
     async function getMessages() {
       // API endpoint for getting last 25 messages
-      const endpoint = "/api/v1/message/get";
+      const endpoint = "https://enthusiastic-moth-tuxedo.cyclic.app//api/v1/message/get";
 
       try {
         const response = await fetch(endpoint);
